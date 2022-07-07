@@ -45,11 +45,15 @@
     text-decoration: none;
     margin: 2em 0 3em 0;
 }
+.form-element-err{
+    border-bottom: 1px solid #df3d4d;
+    color: #df3d4d;
+}
 .text-err{
     margin-top: .2em;
     font-size: .9em;
     font-style: oblique;
-    color: #dc3545;
+    color: #df3d4d;
 }
 .container-redirect{
     display: flex;

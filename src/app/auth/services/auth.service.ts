@@ -9,6 +9,7 @@ import { AuthResponse, User } from '../interfaces/auth';
 })
 export class AuthService {
 
+  public validatorEmailPattern : string = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
   private api: string = environment.api;
   private _user!: User;
 

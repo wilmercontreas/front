@@ -11,19 +11,59 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent implements OnInit {
 
+  // creacion del formulario reactivo 
   miFormulario: FormGroup = this.fb.group({
-    email: ['test@email.com', [Validators.required, Validators.email] ],
-    password: ['123456', [Validators.required, Validators.minLength(6)]]
+    email: ['', [Validators.required, Validators.pattern(this.authService.validatorEmailPattern)] ],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) { }
+  constructor(private fb: FormBuilder, 
+    private router: Router, 
+    private authService: AuthService){}
 
   ngOnInit(): void {}
-  
-  login(){
-    console.log(this.miFormulario.value);
-    const {email, password} = this.miFormulario.value;
 
+  // mostrar mensaje de error para el campo de email 
+  get mnsgErrEmail(): string {
+    if(this.miFormulario.controls['email']?.errors?.['required']){
+      return 'El campo es obligatorio'
+    } else if(this.miFormulario.controls['email']?.errors?.['pattern']){
+      return 'El Formato del correo no es valido'
+    }
+    return '';
+  };
+
+  // mostrar mensaje de error para el campo de password 
+  get mnsgErrpassword(): string {
+    if(this.miFormulario.controls['password']?.errors?.['required']){
+      return 'El campo es obligatorio'
+    } else if(this.miFormulario.controls['password']?.errors?.['minlength']){
+      return 'Este campo debe tener minimo 6 caracteres'
+    }
+    return '';
+  };
+
+  // evaluar si campos del fomulario fueron tocados y son invalidos para mostrarmensage de error
+  campoNoValido(campo: string) {
+    return this.miFormulario.controls[campo].errors && this.miFormulario.controls[campo].touched;
+  }
+  
+  // metodo submit del formulario
+  login(){
+    // campos del formulario incorrecto
+    if (!this.miFormulario.valid) {
+      this.miFormulario.markAllAsTouched();
+      Swal.fire({
+        icon: 'warning',
+        title: 'Llene el formulario correctamente',
+        showConfirmButton: false,
+        timer: 2500
+      });
+      return;
+    }
+    
+    // llamado al servicio de login
+    const {email, password} = this.miFormulario.value;
     this.authService.login(email, password).subscribe(ok => {
       if ( ok === true ) {
         this.router.navigateByUrl('/dashboard');
@@ -35,8 +75,6 @@ export class LoginComponent implements OnInit {
         });
       }
     });
-    
-    // this.router.navigateByUrl('/dashboard');
   }
 
 }
