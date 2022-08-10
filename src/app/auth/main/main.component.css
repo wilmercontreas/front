@@ -3,6 +3,6 @@
     min-width: 100vw;
     display: grid;
     place-items: center;
-    background-color: #ececec;
+    background-color: var(--lightgray);
 }
 
